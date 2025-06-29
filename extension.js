@@ -1,45 +1,22 @@
-/*
-    This event triggers when the browser has committed to loading a webpage.
-    As opposed to e.g. webNavigation.onCompleted, this will start to run early
-    so that we can begin to remove ads as soon as possible.
-*/
-chrome.webNavigation.onCommitted.addListener(function (tab) {
-    // Prevents script from running when other frames load
-    if (tab.frameId == 0) {
-        chrome.tabs.query({ active: true, lastFocusedWindow: true }, tabs => {
+// This background script runs as a service worker in Manifest V3
 
-            // Get the URL of the webpage
-            let url = tabs[0].url;
-            // Remove unnecessary protocol definitions and www subdomain from the URL
-            let parsedUrl = url.replace("https://", "")
-                .replace("http://", "")
-                .replace("www.", "")
-
-            // Remove path and queries e.g. linkedin.com/feed or linkedin.com?query=value
-            // We only want the base domain
-            let domain = parsedUrl.slice(0, parsedUrl.indexOf('/') == -1 ? parsedUrl.length : parsedUrl.indexOf('/'))
-                .slice(0, parsedUrl.indexOf('?') == -1 ? parsedUrl.length : parsedUrl.indexOf('?'));
-
-            try {
-                if (domain.length < 1 || domain === null || domain === undefined) {
-                    return;
-                } else if (domain == "linkedin.com") {
-                    runLinkedinScript();
-                    return;
-                }
-            } catch (err) {
-                throw err;
-            }
-
-        });
+// Triggered whenever the user navigates to a new page or refreshes
+chrome.webNavigation.onCommitted.addListener((details) => {
+  // Only run on the main frame (not iframes)
+  if (details.frameId === 0) {
+    // Check if the user is on a LinkedIn page
+    if (details.url.includes("linkedin.com")) {
+      // Inject the content script (linkedin.js) into the current tab
+      chrome.scripting.executeScript({
+        target: { tabId: details.tabId },
+        files: ['linkedin.js']
+      }, () => {
+        if (chrome.runtime.lastError) {
+          console.error("Script injection failed: ", chrome.runtime.lastError.message);
+        } else {
+          console.log("LinkedIn AdBlocker script injected successfully.");
+        }
+      });
     }
+  }
 });
-
-
-function runLinkedinScript() {
-    // Inject script from file into the webpage
-    chrome.tabs.executeScript({
-        file: 'linkedin.js'
-    });
-    return true;
-}
