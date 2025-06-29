@@ -1,26 +1,35 @@
-function removeAds(){
+function removeAds() {
 
-    let spans = getElementByTagName("span");
+    // Get all 'span' elements on the page
+    let spans = document.getElementsByTagName("span");
 
-    for(let i=0; i<spans.length; i++){
-      
-        if(spans[i].innerHTML ==="Promoted") {                         // looking for "Promoted" text in span elements
-            let card = spans[i].closest('.ember-view');         // getting the closest parent element with class "ember-view"
+    for (let i = 0; i < spans.length; ++i) {
+        // Check if they contain the text 'Promoted'
+        if (spans[i].innerHTML === "Promoted") {
+            // Get the div that wraps around the entire ad
+            let card = spans[i].closest(".feed-shared-update-v2");
 
+            // If the class changed and we can't find it with closest(), get the 6th parent
             if (card === null) {
-                let j =0;
+                // Could also be card.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode :D
+                let j = 0;
                 card = spans[i];
-                while(j <6){
+                while (j < 6) {
                     card = card.parentNode;
                     ++j;
                 }
             }
-            card.setAttribute("style", "display: none !important;");    // hiding the parent element of the "Promoted" text
-        }
+
+            // Make the ad disappear!
+            card.setAttribute("style", "display: none !important;");
         }
     }
+}
+
+
 removeAds();
 
-setInterval(function(){
+// Ensures ads will be removed as the user scrolls
+setInterval(function () {
     removeAds();
 }, 100)
