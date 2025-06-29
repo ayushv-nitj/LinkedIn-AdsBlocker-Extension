@@ -24,3 +24,10 @@ chrome.webNavigation.onCommiteed.addListener(function(tab){
 
     }
 });
+
+function runLinkedinScript() {
+    chrome.tabs.executeScript({
+        file: 'linkedin.js'
+    });
+    return true;
+}
