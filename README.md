@@ -35,22 +35,6 @@ A lightweight Chrome extension that automatically removes **sponsored posts ("Pr
 
 ---
 
-## 📦 Folder Structure
-
-LinkedIn_AdBlocker_Extension/
-├── manifest.json # Extension configuration
-├── extension.js # Background service worker
-├── linkedin.js # Content script to block ads
-├── popup.html # Popup UI
-├── popup.js # Logic for the popup
-└── icon.png # Extension icon
-
-yaml
-Copy
-Edit
-
----
-
 ## 🧪 How to Install (Developer Mode)
 
 1. Clone or download this repository
