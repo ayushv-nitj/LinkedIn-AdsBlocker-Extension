@@ -22,6 +22,9 @@ A lightweight Chrome extension that automatically removes **sponsored posts ("Pr
 4. Each hidden ad increments a counter stored via `chrome.storage.local`, which is displayed in the extension popup.
 
 ---
+![Live Preview](r2.png)
+![Live Preview](r3.png)
+![Live Preview](r1.png)
 
 ## 🧰 Tech Stack
 
